@@ -1,0 +1,42 @@
+/* ══════════════════════════════════════════════════════════════
+   Neorgon Header Kit — season.css  (CDN ONLY, never vendored)
+   ────────────────────────────────────────────────────────────
+   THE FLEET-WIDE LEVER. Every site loads this one file from the
+   CDN, after its local theme CSS. Whatever token block you paste
+   below becomes the default header theme on every site at once —
+   no site edits, no site redeploys.
+
+   HOW TO TRIGGER A SEASON (e.g. Christmas):
+     1. Copy a theme block from themes.css (e.g. the christmas
+        tokens) into the marked area below, scoped to
+        `html:not([data-theme])` as shown in the example.
+     2. Publish:  cd neorgon-cdn-site && node scripts/upload-assets.js
+     3. Every site flips on its next page load.
+
+   TO REVERT: empty the block again (leave this comment) and
+   re-run upload-assets.js. Or just let the season file stay —
+   an empty file = default theme everywhere.
+
+   PRECEDENCE (a visitor's own choice always wins):
+     ?theme=x URL param  →  sets data-theme → season rule stops matching
+     neo_theme cookie    →  sets data-theme → season rule stops matching
+     season.css          →  applies only while html has NO data-theme
+     (nothing)           →  kit default gradient
+
+   EXAMPLE — Christmas (tokens mirror themes.css):
+     html:not([data-theme]) {
+       --header-bg-start: #7f1d1d;
+       --header-bg-mid:   #14532d;
+       --header-bg-end:   #052e16;
+       --header-glass:    rgba(5, 46, 22, .45);
+       --header-accent:   #fbbf24;
+       --header-border:        rgba(251, 191, 36, .25);
+       --header-border-strong: rgba(251, 191, 36, .45);
+       --header-text:     #fefce8;
+       --header-text-dim: rgba(254, 252, 232, .65);
+       --header-menu-bg:  #14210f;
+       --header-menu-hover: rgba(251, 191, 36, .12);
+     }
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── ACTIVE SEASON: none (default theme everywhere) ─────────── */

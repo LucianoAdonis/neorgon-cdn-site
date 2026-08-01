@@ -1,0 +1,19 @@
+# Cloudflare R2 Configuration
+name = "neorgon-cdn"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+# R2 bucket binding
+[[r2_buckets]]
+binding = "ASSETS_BUCKET"
+bucket_name = "neorgon-cdn-prod"
+
+# Environment configuration
+[env.production]
+name = "neorgon-cdn-prod"
+
+[env.staging]
+name = "neorgon-cdn-staging"
+[[env.staging.r2_buckets]]
+binding = "ASSETS_BUCKET"
+bucket_name = "neorgon-cdn-staging"
