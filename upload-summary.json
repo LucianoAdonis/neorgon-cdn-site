@@ -1,8 +1,49 @@
 {
-  "timestamp": "2026-08-01T19:51:08.012Z",
+  "timestamp": "2026-08-01T23:07:13.783Z",
   "bucket": "neorgon-cdn-prod",
-  "uploaded": 0,
-  "failed": 8,
-  "totalSize": 0,
-  "files": []
+  "uploaded": 8,
+  "failed": 0,
+  "totalSize": 308433,
+  "files": [
+    {
+      "path": "energon-classic-logo.png",
+      "key": "v1.0.0/energon-classic-logo.png",
+      "url": "https://cdn.neorgon.com/v1.0.0/energon-classic-logo.png"
+    },
+    {
+      "path": "favicon.ico",
+      "key": "v1.0.0/favicon.ico",
+      "url": "https://cdn.neorgon.com/v1.0.0/favicon.ico"
+    },
+    {
+      "path": "header/header.css",
+      "key": "v1.0.0/header/header.css",
+      "url": "https://cdn.neorgon.com/v1.0.0/header/header.css"
+    },
+    {
+      "path": "header/header.js",
+      "key": "v1.0.0/header/header.js",
+      "url": "https://cdn.neorgon.com/v1.0.0/header/header.js"
+    },
+    {
+      "path": "header/season.css",
+      "key": "v1.0.0/header/season.css",
+      "url": "https://cdn.neorgon.com/v1.0.0/header/season.css"
+    },
+    {
+      "path": "header/themes.css",
+      "key": "v1.0.0/header/themes.css",
+      "url": "https://cdn.neorgon.com/v1.0.0/header/themes.css"
+    },
+    {
+      "path": "styles/base.css",
+      "key": "v1.0.0/styles/base.css",
+      "url": "https://cdn.neorgon.com/v1.0.0/styles/base.css"
+    },
+    {
+      "path": "utils/common.js",
+      "key": "v1.0.0/utils/common.js",
+      "url": "https://cdn.neorgon.com/v1.0.0/utils/common.js"
+    }
+  ]
 }
