@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-08-01T23:07:13.783Z",
+  "timestamp": "2026-08-04T00:49:48.473Z",
   "bucket": "neorgon-cdn-prod",
-  "uploaded": 8,
+  "uploaded": 10,
   "failed": 0,
-  "totalSize": 308433,
+  "totalSize": 355794,
   "files": [
     {
       "path": "energon-classic-logo.png",
@@ -14,6 +14,16 @@
       "path": "favicon.ico",
       "key": "v1.0.0/favicon.ico",
       "url": "https://cdn.neorgon.com/v1.0.0/favicon.ico"
+    },
+    {
+      "path": "footer/footer.css",
+      "key": "v1.0.0/footer/footer.css",
+      "url": "https://cdn.neorgon.com/v1.0.0/footer/footer.css"
+    },
+    {
+      "path": "footer/footer.js",
+      "key": "v1.0.0/footer/footer.js",
+      "url": "https://cdn.neorgon.com/v1.0.0/footer/footer.js"
     },
     {
       "path": "header/header.css",
