@@ -2,41 +2,87 @@
    Neorgon Header Kit — season.css  (CDN ONLY, never vendored)
    ────────────────────────────────────────────────────────────
    THE FLEET-WIDE LEVER. Every site loads this one file from the
-   CDN, after its local theme CSS. Whatever token block you paste
-   below becomes the default header theme on every site at once —
-   no site edits, no site redeploys.
+   CDN, last. Arm a season here and all 46 sites are decorated on
+   their next page load — no site edits, no site redeploys.
 
-   HOW TO TRIGGER A SEASON (e.g. Christmas):
-     1. Copy a theme block from themes.css (e.g. the christmas
-        tokens) into the marked area below, scoped to
-        `html:not([data-theme])` as shown in the example.
-     2. Publish:  cd neorgon-cdn-site && node scripts/upload-assets.js
-     3. Every site flips on its next page load.
+   HOW TO ARM A SEASON
+     1. Open seasons-demo.html, click the season you want, and hit
+        "Copy season.css block". It hands you that season's rules
+        already rewritten for the season selector below.
+     2. Paste into the ARMED SEASON zone at the bottom of this file,
+        replacing whatever was there.
+     3. cd neorgon-cdn-site && node scripts/upload-assets.js
+   TO REVERT: empty the ARMED SEASON zone and re-upload.
 
-   TO REVERT: empty the block again (leave this comment) and
-   re-run upload-assets.js. Or just let the season file stay —
-   an empty file = default theme everywhere.
+   Only one season ships at a time on purpose: this file is
+   render-blocking on every site, so it carries the live season and
+   nothing else. The full set lives in themes.css (vendored), which
+   is also where the demo page reads the recipes from — themes.css
+   is the single source of truth for what a season looks like.
 
    PRECEDENCE (a visitor's own choice always wins):
-     ?theme=x URL param  →  sets data-theme → season rule stops matching
-     neo_theme cookie    →  sets data-theme → season rule stops matching
+     ?theme=x URL param  →  sets data-theme → season stops matching
+     neo_theme cookie    →  sets data-theme → season stops matching
      season.css          →  applies only while html has NO data-theme
      (nothing)           →  kit default gradient
 
-   EXAMPLE — Christmas (tokens mirror themes.css):
-     html:not([data-theme]) {
-       --header-bg-start: #7f1d1d;
-       --header-bg-mid:   #14532d;
-       --header-bg-end:   #052e16;
-       --header-glass:    rgba(5, 46, 22, .45);
-       --header-accent:   #fbbf24;
-       --header-border:        rgba(251, 191, 36, .25);
-       --header-border-strong: rgba(251, 191, 36, .45);
-       --header-text:     #fefce8;
-       --header-text-dim: rgba(254, 252, 232, .65);
-       --header-menu-bg:  #14210f;
-       --header-menu-hover: rgba(251, 191, 36, .12);
-     }
+   SELECTOR STRATEGY — why `html:not([data-theme]) body .header-bar`
+     Sites may set their own default-header tokens at a specificity
+     that beats a naive root-level rule. emoji-site does exactly
+     this in its inline <style>:
+       html:not([data-theme]) .header-bar { --header-bg-start: … }
+     That is (0,2,1). A season rule written as `html:not([data-theme])`
+     is only (0,1,1), so it LOSES on specificity no matter that
+     season.css loads later. Adding `body` lifts the season to
+     (0,2,2) — it beats a site's own default while still collapsing
+     the instant a visitor picks a theme. `body` was chosen over
+     `[data-header-mode]` because three sites (ops-console,
+     questline-site, rush-q-cards-site) render .header-bar with no
+     mode attribute; `body` always matches. Tokens go on .header-bar
+     rather than on html for the same reason — that is where the
+     site-level override lives, so that is where it must be beaten.
+     Intent: visitor choice > season > site default > kit default.
+
+   FX RULES (full rationale in themes.css):
+     · never overflow:hidden on .header-bar — the ⋯ menu and auth
+       panel hang below it and would be clipped
+     · layers are inset:0 pseudo-elements; a background is bounded
+       by its own box, so no clipping is needed
+     · z-index:-1 draws above the bar's background, below all content
+     · animate background-position / opacity only; travels are
+       integer multiples of tile size so loops are seamless
    ══════════════════════════════════════════════════════════════ */
 
-/* ── ACTIVE SEASON: none (default theme everywhere) ─────────── */
+/* Shared geometry for whichever season is armed.
+   `content` lives HERE, not in the armed block: the theme path gets it
+   from the [data-theme] engine rule in themes.css, and a season block
+   copied out of themes.css would otherwise arrive without it and
+   silently render nothing — a bad way to find out on December 1st.
+   With no season armed these two layers have no background, so they
+   generate a box that paints nothing and cannot be interacted with. */
+html:not([data-theme]) body .header-bar::before,
+html:not([data-theme]) body .header-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Motion + print guards. animation:none parks each layer at its
+   authored background-position, which is a composed static
+   decoration in every season. */
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-theme]) body .header-bar::before,
+  html:not([data-theme]) body .header-bar::after { animation: none !important; }
+}
+@media print {
+  html:not([data-theme]) body .header-bar::before,
+  html:not([data-theme]) body .header-bar::after { display: none !important; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   ARMED SEASON — paste one block from seasons-demo.html here.
+   Currently: none (kit default gradient everywhere).
+   ══════════════════════════════════════════════════════════════ */
