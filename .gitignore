@@ -11,3 +11,6 @@ npm-debug.log*
 # ── Secrets — never commit ────────────────────────────────────────────────────
 .env
 .env.*
+
+# Wrangler build cache (contains geolocation from dev sessions)
+.wrangler/
