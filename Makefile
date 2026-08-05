@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-PORT = 8000  # replace with the port assigned in scripts/repo-tools.sh
+PORT = 8845
 
 # ── Help ──────────────────────────────────────────────────────────────────────
 .PHONY: help
