@@ -24,9 +24,27 @@
      ?theme=x URL param  →  sets data-theme → season stops matching
      neo_theme cookie    →  sets data-theme → season stops matching
      season.css          →  applies only while html has NO data-theme
+     site skin           →  data-header-skin on the bar; a season
+                            outranks it (see the skin variant below)
      (nothing)           →  kit default gradient
 
-   SELECTOR STRATEGY — why `html:not([data-theme]) body .header-bar`
+   PER-SITE OPT-OUT
+     <html lang="en" data-season="off">
+   keeps a site on its own skin/default through every armed season —
+   for sites whose palette carries meaning that decoration would
+   undercut (clinical, security, incident surfaces). It is a static
+   attribute on purpose: no JS, so nothing flashes before it applies.
+   A visitor's ?theme= still wins over an opted-out site — the opt-out
+   declines the FLEET's decoration, it does not overrule the person.
+
+   SKINNED SITES AND SEASONS
+     Every rule below is duplicated onto a `[data-header-skin]`
+     variant, and the generator in seasons-demo.html now emits the
+     same pair. A skin is (0,3,1); without that variant the season's
+     colour tokens lose to it and only the decoration layers paint —
+     a half-applied season that is very hard to spot until December.
+
+   SELECTOR STRATEGY — why `html:not([data-theme]):not([data-season="off"]) body .header-bar`
      Sites may set their own default-header tokens at a specificity
      that beats a naive root-level rule. emoji-site does exactly
      this in its inline <style>:
@@ -60,10 +78,10 @@
    silently render nothing — a bad way to find out on December 1st.
    With no season armed these two layers have no background, so they
    generate a box that paints nothing and cannot be interacted with. */
-html:not([data-theme]) body .header-bar::before,
-html:not([data-theme]) body .header-bar::after,
-html:not([data-theme]) body .header-bar[data-header-skin]::before,
-html:not([data-theme]) body .header-bar[data-header-skin]::after {
+html:not([data-theme]):not([data-season="off"]) body .header-bar::before,
+html:not([data-theme]):not([data-season="off"]) body .header-bar::after,
+html:not([data-theme]):not([data-season="off"]) body .header-bar[data-header-skin]::before,
+html:not([data-theme]):not([data-season="off"]) body .header-bar[data-header-skin]::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -75,16 +93,16 @@ html:not([data-theme]) body .header-bar[data-header-skin]::after {
    authored background-position, which is a composed static
    decoration in every season. */
 @media (prefers-reduced-motion: reduce) {
-  html:not([data-theme]) body .header-bar::before,
-  html:not([data-theme]) body .header-bar::after,
-  html:not([data-theme]) body .header-bar[data-header-skin]::before,
-  html:not([data-theme]) body .header-bar[data-header-skin]::after { animation: none !important; }
+  html:not([data-theme]):not([data-season="off"]) body .header-bar::before,
+  html:not([data-theme]):not([data-season="off"]) body .header-bar::after,
+  html:not([data-theme]):not([data-season="off"]) body .header-bar[data-header-skin]::before,
+  html:not([data-theme]):not([data-season="off"]) body .header-bar[data-header-skin]::after { animation: none !important; }
 }
 @media print {
-  html:not([data-theme]) body .header-bar::before,
-  html:not([data-theme]) body .header-bar::after,
-  html:not([data-theme]) body .header-bar[data-header-skin]::before,
-  html:not([data-theme]) body .header-bar[data-header-skin]::after { display: none !important; }
+  html:not([data-theme]):not([data-season="off"]) body .header-bar::before,
+  html:not([data-theme]):not([data-season="off"]) body .header-bar::after,
+  html:not([data-theme]):not([data-season="off"]) body .header-bar[data-header-skin]::before,
+  html:not([data-theme]):not([data-season="off"]) body .header-bar[data-header-skin]::after { display: none !important; }
 }
 
 
