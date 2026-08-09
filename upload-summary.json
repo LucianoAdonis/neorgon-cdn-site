@@ -8,52 +8,52 @@
     {
       "path": "energon-classic-logo.png",
       "key": "v1.0.0/energon-classic-logo.png",
-      "url": "https://cdn.neorgon.com/v1.0.0/energon-classic-logo.png"
+      "url": "https://cdn.neorgon.org/v1.0.0/energon-classic-logo.png"
     },
     {
       "path": "favicon.ico",
       "key": "v1.0.0/favicon.ico",
-      "url": "https://cdn.neorgon.com/v1.0.0/favicon.ico"
+      "url": "https://cdn.neorgon.org/v1.0.0/favicon.ico"
     },
     {
       "path": "footer/footer.css",
       "key": "v1.0.0/footer/footer.css",
-      "url": "https://cdn.neorgon.com/v1.0.0/footer/footer.css"
+      "url": "https://cdn.neorgon.org/v1.0.0/footer/footer.css"
     },
     {
       "path": "footer/footer.js",
       "key": "v1.0.0/footer/footer.js",
-      "url": "https://cdn.neorgon.com/v1.0.0/footer/footer.js"
+      "url": "https://cdn.neorgon.org/v1.0.0/footer/footer.js"
     },
     {
       "path": "header/header.css",
       "key": "v1.0.0/header/header.css",
-      "url": "https://cdn.neorgon.com/v1.0.0/header/header.css"
+      "url": "https://cdn.neorgon.org/v1.0.0/header/header.css"
     },
     {
       "path": "header/header.js",
       "key": "v1.0.0/header/header.js",
-      "url": "https://cdn.neorgon.com/v1.0.0/header/header.js"
+      "url": "https://cdn.neorgon.org/v1.0.0/header/header.js"
     },
     {
       "path": "header/season.css",
       "key": "v1.0.0/header/season.css",
-      "url": "https://cdn.neorgon.com/v1.0.0/header/season.css"
+      "url": "https://cdn.neorgon.org/v1.0.0/header/season.css"
     },
     {
       "path": "header/themes.css",
       "key": "v1.0.0/header/themes.css",
-      "url": "https://cdn.neorgon.com/v1.0.0/header/themes.css"
+      "url": "https://cdn.neorgon.org/v1.0.0/header/themes.css"
     },
     {
       "path": "styles/base.css",
       "key": "v1.0.0/styles/base.css",
-      "url": "https://cdn.neorgon.com/v1.0.0/styles/base.css"
+      "url": "https://cdn.neorgon.org/v1.0.0/styles/base.css"
     },
     {
       "path": "utils/common.js",
       "key": "v1.0.0/utils/common.js",
-      "url": "https://cdn.neorgon.com/v1.0.0/utils/common.js"
+      "url": "https://cdn.neorgon.org/v1.0.0/utils/common.js"
     }
   ]
 }

@@ -35,7 +35,10 @@ npx wrangler r2 bucket create neorgon-cdn-prod
 3. Name: `neorgon-cdn-prod`
 4. Permissions: **Edit** (read + write)
 5. Click **Create**
-6. Copy the **Account ID** and **API Token**
+6. Copy the **Account ID**, the **Access Key ID** and the **Secret Access Key**
+
+One R2 API token issues both the S3 key pair and a Cloudflare API token, so they share a
+lifecycle and an IP filter — when uploads break, they break together.
 
 ---
 
@@ -49,9 +52,17 @@ cp .env.example .env
 Edit `.env`:
 ```bash
 CLOUDFLARE_ACCOUNT_ID=your_account_id_here
-CLOUDFLARE_API_TOKEN=your_api_token_here
+R2_ACCESS_KEY_ID=your_r2_access_key_id
+R2_SECRET_ACCESS_KEY=your_r2_secret_access_key
 R2_BUCKET_NAME=neorgon-cdn-prod
+
+# Only wrangler (`npm run deploy`) uses this; the uploader ignores it.
+CLOUDFLARE_API_TOKEN=your_api_token_here
 ```
+
+`upload-assets.js` reaches R2 over the **S3-compatible API**, so the S3 key pair is what it
+needs — an account id plus `CLOUDFLARE_API_TOKEN` alone will not upload anything. The secret is
+exactly 64 hex characters; a `SignatureDoesNotMatch` usually means it was mis-pasted.
 
 ---
 
@@ -107,6 +118,12 @@ Expected output:
 
 ## Step 5: Configure Custom Domain
 
+> **Already done, and it is Option B.** `cdn.neorgon.org` is a custom domain connected
+> **directly to the R2 bucket**. The Worker in `src/index.js` is therefore *not* in the request
+> path — a live asset carries no `Access-Control-Allow-Origin` (the Worker always sets one), `/`
+> returns R2's own 404, and `/robots.txt` returns Cloudflare's managed file. The steps below are
+> the reference for rebuilding it, or for moving to Option C.
+
 **Option A: Use R2.dev domain (Quick)**
 
 Your bucket will be available at:
@@ -118,7 +135,7 @@ https://neorgon-cdn-prod.your-account.r2.dev
 
 1. Go to **R2** → **Settings**
 2. Under **Public Buckets**, click **Connect Domain**
-3. Domain: `cdn.neorgon.com`
+3. Domain: `cdn.neorgon.org`
 4. Follow DNS setup instructions:
    - Add CNAME record pointing to your R2 bucket
    - Enable proxy (orange cloud) for CDN benefits
@@ -133,14 +150,16 @@ https://neorgon-cdn-prod.your-account.r2.dev
 
 2. Add custom domain to Worker:
    - Go to **Workers & Pages** → Your worker → **Settings**
-   - Add custom domain: `cdn.neorgon.com`
+   - Add custom domain: `cdn.neorgon.org`
 
 3. Update DNS CNAME:
    ```
-   cdn.neorgon.com → your-worker.your-account.workers.dev (proxied)
+   cdn.neorgon.org → your-worker.your-account.workers.dev (proxied)
    ```
 
-**Recommendation:** Use Option A first (quickest), migrate to C later.
+**Where this stands:** Option B is live. Option C is the upgrade worth making if the CDN ever
+needs the Worker's behaviour — its own CORS headers, a real index at `/`, or this repo's
+`robots.txt` — none of which reach a browser today.
 
 ---
 
@@ -155,7 +174,7 @@ https://neorgon-cdn-prod.your-account.r2.dev/v1.0.0/energon-classic-logo.png
 
 Or via curl:
 ```bash
-curl -I https://cdn.neorgon.com/v1.0.0/favicon.ico
+curl -I https://cdn.neorgon.org/v1.0.0/favicon.ico
 ```
 
 Should return:
@@ -220,7 +239,7 @@ Run `./setup.sh` in the neorgon-cdn-site directory for a guided setup.
 
 ---
 
-**Next Steps:**
-1. Once CDN is live, update `/scripts/migrate-to-cdn.sh` with your actual CDN URL
-2. Run migration on all projects
-3. See SETUP.md for full instructions
+**Next Steps:** all three are done — the CDN is live on `cdn.neorgon.org`, the monorepo's
+`scripts/migrate-to-cdn.sh` carries that host, and the fleet is migrated. The operational
+runbook lives in the monorepo at `docs/operations/cdn.md`, with the design and the
+credential-troubleshooting matrix in `docs/architecture/cdn.md`.

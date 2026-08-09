@@ -169,7 +169,7 @@ async function main() {
     files: results.map(r => ({
       path: r.path,
       key: r.key,
-      url: `https://cdn.neorgon.com/${r.key}`,
+      url: `https://cdn.neorgon.org/${r.key}`,
     })),
   };
 
@@ -178,8 +178,8 @@ async function main() {
 
   // Output URLs
   console.log('\n🔗 CDN URLs:');
-  console.log(`   Logo: https://cdn.neorgon.com/v1.0.0/energon-classic-logo.png`);
-  console.log(`   Favicon: https://cdn.neorgon.com/v1.0.0/favicon.ico`);
+  console.log(`   Logo: https://cdn.neorgon.org/v1.0.0/energon-classic-logo.png`);
+  console.log(`   Favicon: https://cdn.neorgon.org/v1.0.0/favicon.ico`);
 
   process.exit(failed > 0 ? 1 : 0);
 }

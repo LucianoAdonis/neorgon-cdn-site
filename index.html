@@ -11,21 +11,28 @@
   <meta property="og:title" content="Neorgon CDN | Asset Distribution">
   <meta property="og:description" content="CDN for Neorgon shared assets">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://cdn.neorgon.com/">
+  <meta property="og:url" content="https://cdn.neorgon.org/">
   <meta property="og:site_name" content="Neorgon">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Neorgon CDN | Asset Distribution">
   <meta name="twitter:description" content="CDN for Neorgon shared assets">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://cdn.neorgon.com/">
-  <link rel="icon" type="image/x-icon" href="https://cdn.neorgon.com/v1.0.0/favicon.ico" />
+  <!--
+    noindex, and deliberately so. This page is never served: cdn.neorgon.org is bound
+    directly to the R2 bucket, not to the Worker in src/index.js, so the origin returns
+    R2's own 404 at / and this file is only reachable locally via `make serve`. It
+    previously claimed "index, follow" for a URL that answers 404 — see
+    docs/operations/cdn.md.
+  -->
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://cdn.neorgon.org/">
+  <link rel="icon" type="image/x-icon" href="https://cdn.neorgon.org/v1.0.0/favicon.ico" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Neorgon CDN",
     "description": "CDN for Neorgon shared assets and resources",
-    "url": "https://cdn.neorgon.com/",
+    "url": "https://cdn.neorgon.org/",
     "publisher": {
       "@type": "Organization",
       "name": "Neorgon",

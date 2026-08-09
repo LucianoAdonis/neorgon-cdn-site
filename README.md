@@ -12,7 +12,7 @@ Fast CDN for sharing assets across all Neorgon projects
 [badge-claude]:  https://img.shields.io/badge/Claude_Code-CC785C?style=for-the-badge&logo=anthropic&logoColor=white
 [badge-license]: https://img.shields.io/badge/license-MIT-404040?style=for-the-badge
 
-[url-site]:   https://cdn.neorgon.com/
+[url-site]:   https://cdn.neorgon.org/
 [url-claude]: https://claude.ai/code
 
 </div>
@@ -23,7 +23,15 @@ Fast CDN for sharing assets across all Neorgon projects
 
 Cloudflare R2-powered CDN for delivering shared assets to all Neorgon sites. Stores logos, favicons, CSS variables, and JavaScript utilities in one place for faster loading and easier maintenance.
 
-**Live:** cdn.neorgon.com
+**Live:** cdn.neorgon.org
+
+> **What actually serves the assets.** `cdn.neorgon.org` is a custom domain bound **directly to
+> the R2 bucket**, so the Worker in `src/index.js` is not currently in the request path: a live
+> asset response carries no `Access-Control-Allow-Origin` (the Worker always sets one), `/`
+> returns R2's own 404 page, and `/robots.txt` returns Cloudflare's managed file rather than the
+> one in this repo. The Worker, `index.html`, `robots.txt` and `sitemap.xml` are therefore
+> reference/fallback material, not what a browser reaches. `index.html` is `noindex` for that
+> reason. Deploying assets means `npm run upload-assets`; there is no git deployment.
 
 ---
 
@@ -31,9 +39,8 @@ Cloudflare R2-powered CDN for delivering shared assets to all Neorgon sites. Sto
 
 - **🚀 Global CDN** - Cloudflare edge caching
 - **📦 Shared Assets** - Logo, favicon, CSS, JS utilities
-- **💾 Version Control** - Assets versioned (v1.0.0/) for cache-busting
-- **🔧 Auto-Upload** - Simple script to upload new assets
-- **📊 Usage Dashboard** - See which assets are being served
+- **💾 Version Control** - Assets versioned (`v1.0.0/`) and served `immutable`
+- **🔧 Auto-Upload** - One script uploads `assets/` to R2 with the right content types
 
 ---
 
@@ -71,10 +78,10 @@ npm run upload-assets
 
 | Asset | URL |
 |-------|-----|
-| Logo | `https://cdn.neorgon.com/v1.0.0/energon-classic-logo.png` |
-| Favicon | `https://cdn.neorgon.com/v1.0.0/favicon.ico` |
-| CSS Base | `https://cdn.neorgon.com/v1.0.0/styles/base.css` |
-| JS Utils | `https://cdn.neorgon.com/v1.0.0/utils/common.js` |
+| Logo | `https://cdn.neorgon.org/v1.0.0/energon-classic-logo.png` |
+| Favicon | `https://cdn.neorgon.org/v1.0.0/favicon.ico` |
+| CSS Base | `https://cdn.neorgon.org/v1.0.0/styles/base.css` |
+| JS Utils | `https://cdn.neorgon.org/v1.0.0/utils/common.js` |
 
 ---
 
@@ -83,16 +90,24 @@ npm run upload-assets
 ```
 neorgon-cdn-site/
 ├── src/
-│   └── index.js          # Cloudflare Worker for serving assets
+│   └── index.js          # Worker: serves R2 objects with CORS + immutable caching.
+│                         #   Not in the live request path — see the note above.
 ├── scripts/
-│   └── upload-assets.js  # Upload assets to R2 bucket
-├── assets/
+│   └── upload-assets.js  # Upload assets/ → R2 under v1.0.0/<relpath>. THE deploy path.
+├── assets/               # Staged from packages/neorgon-ui/ in the monorepo
 │   ├── energon-classic-logo.png
-│   └── favicon.ico
-├── wrangler.toml         # Cloudflare Worker config
+│   ├── favicon.ico
+│   ├── header/           # header.css, header.js, themes.css, season.css
+│   ├── footer/           # footer.css, footer.js
+│   ├── styles/base.css   # canonical design tokens
+│   └── utils/common.js
+├── wrangler.toml         # Worker + R2 bucket bindings (prod / staging)
 ├── package.json
-├── index.html            # CDN info page
-└── CNAME
+├── index.html            # Asset reference page, local-only (noindex)
+├── robots.txt            # Not served; kept for the registry's asset flags
+├── sitemap.xml           # Not served; kept for the registry's asset flags
+└── CNAME                 # Inert here: a GitHub Pages mechanism, and Pages is off.
+                          #   Cloudflare owns the cdn.neorgon.org record.
 ```
 
 ---
@@ -143,52 +158,19 @@ cd /path/to/Personal
 
 ---
 
----
-
-## Features
-
-- **[Feature name]** -- [what it does]
-- **[Feature name]** -- [what it does]
-- **[Feature name]** -- [what it does]
-
----
-
 ## Running locally
 
-ES modules require an HTTP server (not `file://`):
+`make serve` (port 8845) renders `index.html` — the asset reference page. It is the only way to
+see that page, since the live host serves R2 directly.
 
 ```bash
 make serve
 ```
 
-Or manually:
+Worker development is separate, and needs Cloudflare credentials:
 
 ```bash
-python3 -m http.server 8000
-```
-
----
-
-## Architecture
-
-```
-[FOLDER_NAME]/
-├── index.html          # HTML shell
-├── css/
-│   └── style.css       # All styles
-├── js/
-│   ├── app.js          # Entry point, imports and initializes
-│   ├── state.js        # Shared state, localStorage
-│   ├── render.js       # DOM rendering
-│   ├── events.js       # Event handlers
-│   └── utils.js        # Shared helpers
-├── favicon.ico
-├── energon-classic-logo.png
-├── robots.txt
-├── sitemap.xml
-├── CNAME
-├── Makefile
-└── README.md
+npm run dev      # wrangler dev
 ```
 
 ---

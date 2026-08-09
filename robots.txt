@@ -1,25 +1,14 @@
+# Not served, and disallowing rather than allowing.
+#
+# cdn.neorgon.org is bound directly to the R2 bucket, not to the Worker in src/index.js,
+# so the origin answers / with R2's own 404 and serves Cloudflare's managed robots.txt —
+# this file is never reached. It is kept because the registry derives
+# assets.robots_txt from its presence, and because if the Worker is ever put back in the
+# request path the intent should already be recorded here.
+#
+# That intent: there is nothing to index. The CDN serves versioned, immutable assets to
+# other Neorgon sites; index.html is a local reference page (noindex) and every asset is
+# already reachable from the site that embeds it. See docs/operations/cdn.md.
+
 User-agent: *
-Allow: /
-
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: GPTBot
-Allow: /
-
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: anthropic-ai
-Allow: /
-
-Sitemap: https://DOMAIN/sitemap.xml
+Disallow: /

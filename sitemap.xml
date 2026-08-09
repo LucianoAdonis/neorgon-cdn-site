@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Deliberately empty, and kept only so the registry's assets.sitemap_xml flag stays true.
+  It is not served: cdn.neorgon.org is bound directly to the R2 bucket, so /sitemap.xml
+  returns 404, and robots.txt disallows everything. The previous version listed
+  "https://DOMAIN/" — an unfilled template placeholder. See docs/operations/cdn.md.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://DOMAIN/</loc>
-    <lastmod>2026-01-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
 </urlset>
