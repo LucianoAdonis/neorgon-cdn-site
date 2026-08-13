@@ -14,3 +14,6 @@ npm-debug.log*
 
 # Wrangler build cache (contains geolocation from dev sessions)
 .wrangler/
+
+# The credentials TEMPLATE is repo content — only real env files stay out
+!.env.example
