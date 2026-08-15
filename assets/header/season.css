@@ -11,7 +11,7 @@
         already rewritten for the season selector below.
      2. Paste into the ARMED SEASON zone at the bottom of this file,
         replacing whatever was there.
-     3. cd neorgon-cdn-site && node scripts/upload-assets.js
+     3. cd projects/neorgon-cdn-site && node scripts/upload-assets.js
    TO REVERT: empty the ARMED SEASON zone and re-upload.
 
    Only one season ships at a time on purpose: this file is
