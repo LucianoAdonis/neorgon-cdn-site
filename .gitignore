@@ -17,3 +17,10 @@ npm-debug.log*
 
 # The credentials TEMPLATE is repo content — only real env files stay out
 !.env.example
+
+# ── Neorgon base (enforced by smoke check 20) ─────────────────────────────────
+.forge/
+__pycache__/
+*.py[cod]
+skills-archived/
+*.log
