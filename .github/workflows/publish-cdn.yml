@@ -1,0 +1,47 @@
+# Publishes assets/ to the R2 bucket whenever a staged asset lands on main.
+# Credentials live in this repo's Actions secrets, never in the tree; the
+# endpoint is derived from CLOUDFLARE_ACCOUNT_ID inside upload-assets.js, so
+# no account id appears here either.
+#
+# The R2 token used for these secrets must have NO client IP allowlist:
+# GitHub runners rotate IPs, and an allowlisted token fails every run with
+# code 9109 (the same trap docs/architecture/cdn.md records from 2026-08-03).
+#
+# Manual publishing (node scripts/upload-assets.js with the local .env) keeps
+# working unchanged; this workflow is the same script on a different machine.
+name: Publish CDN assets
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/**'
+      - 'scripts/upload-assets.js'
+      - '.github/workflows/publish-cdn.yml'
+  workflow_dispatch: {}
+
+concurrency:
+  group: cdn-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # wrangler (devDependencies) is only for the Worker; the uploader
+      # needs just the runtime deps.
+      - run: npm ci --omit=dev
+
+      - name: Upload assets to R2
+        run: node scripts/upload-assets.js
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
