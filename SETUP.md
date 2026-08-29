@@ -38,7 +38,7 @@ npx wrangler r2 bucket create neorgon-cdn-prod
 6. Copy the **Account ID**, the **Access Key ID** and the **Secret Access Key**
 
 One R2 API token issues both the S3 key pair and a Cloudflare API token, so they share a
-lifecycle and an IP filter — when uploads break, they break together.
+lifecycle and an IP filter: when uploads break, they break together.
 
 ---
 
@@ -61,7 +61,7 @@ CLOUDFLARE_API_TOKEN=your_api_token_here
 ```
 
 `upload-assets.js` reaches R2 over the **S3-compatible API**, so the S3 key pair is what it
-needs — an account id plus `CLOUDFLARE_API_TOKEN` alone will not upload anything. The secret is
+needs: an account id plus `CLOUDFLARE_API_TOKEN` alone will not upload anything. The secret is
 exactly 64 hex characters; a `SignatureDoesNotMatch` usually means it was mis-pasted.
 
 ---
@@ -120,7 +120,7 @@ Expected output:
 
 > **Already done, and it is Option B.** `cdn.neorgon.org` is a custom domain connected
 > **directly to the R2 bucket**. The Worker in `src/index.js` is therefore *not* in the request
-> path — a live asset carries no `Access-Control-Allow-Origin` (the Worker always sets one), `/`
+> path: a live asset carries no `Access-Control-Allow-Origin` (the Worker always sets one), `/`
 > returns R2's own 404, and `/robots.txt` returns Cloudflare's managed file. The steps below are
 > the reference for rebuilding it, or for moving to Option C.
 
@@ -158,8 +158,8 @@ https://neorgon-cdn-prod.your-account.r2.dev
    ```
 
 **Where this stands:** Option B is live. Option C is the upgrade worth making if the CDN ever
-needs the Worker's behaviour — its own CORS headers, a real index at `/`, or this repo's
-`robots.txt` — none of which reach a browser today.
+needs the Worker's behaviour: its own CORS headers, a real index at `/`, or this repo's
+`robots.txt`: none of which reach a browser today.
 
 ---
 
@@ -239,7 +239,7 @@ Run `./setup.sh` in the neorgon-cdn-site directory for a guided setup.
 
 ---
 
-**Next Steps:** all three are done — the CDN is live on `cdn.neorgon.org`, the monorepo's
+**Next Steps:** all three are done. The CDN is live on `cdn.neorgon.org`, the monorepo's
 `scripts/migrate-to-cdn.sh` carries that host, and the fleet is migrated. The operational
 runbook lives in the monorepo at `docs/operations/cdn.md`, with the design and the
 credential-troubleshooting matrix in `docs/architecture/cdn.md`.

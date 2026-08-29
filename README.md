@@ -160,7 +160,7 @@ cd /path/to/Personal
 
 ## Running locally
 
-`make serve` (port 8845) renders `index.html` — the asset reference page. It is the only way to
+`make serve` (port 8845) renders `index.html`: the asset reference page. It is the only way to
 see that page, since the live host serves R2 directly.
 
 ```bash
