@@ -19,6 +19,27 @@ const mime = require('mime-types');
 const BASE_DIR = path.resolve(__dirname, '..');
 const ASSETS_DIR = path.join(BASE_DIR, 'assets');
 
+// Cache policy, stored on each R2 object and served as-is, because
+// cdn.neorgon.org is an R2 custom domain (src/index.js is not in the path).
+//
+// Almost every asset keeps its bytes for the life of its versioned URL, so a
+// year of immutable caching is right. header/season.css is the exception: it
+// is the fleet's season switch, overwritten in place at the one URL every kit
+// site links, and the header kit README promises that a season flips on the
+// next page load. Under "immutable" a returning visitor would keep last
+// season's file for up to a year, so it revalidates every five minutes.
+const IMMUTABLE_CACHE = 'public, max-age=31536000, immutable';
+const REVALIDATE_CACHE = 'public, max-age=300, must-revalidate';
+const REVALIDATE_PATHS = new Set(['header/season.css']);
+
+/**
+ * Cache-Control for an asset, by its path relative to assets/
+ */
+function cacheControlFor(relativePath) {
+  const normalized = relativePath.replace(/\\/g, '/');
+  return REVALIDATE_PATHS.has(normalized) ? REVALIDATE_CACHE : IMMUTABLE_CACHE;
+}
+
 // Configuration
 const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
 const ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID;
@@ -72,8 +93,9 @@ async function uploadFile(filePath) {
 
   const fileStream = fs.createReadStream(filePath);
   const contentType = mime.lookup(filePath) || 'application/octet-stream';
+  const cacheControl = cacheControlFor(relativePath);
 
-  console.log(`📤 Uploading: ${relativePath} (${contentType})`);
+  console.log(`📤 Uploading: ${relativePath} (${contentType}; ${cacheControl})`);
 
   try {
     const upload = new Upload({
@@ -83,7 +105,7 @@ async function uploadFile(filePath) {
         Key: key,
         Body: fileStream,
         ContentType: contentType,
-        CacheControl: 'public, max-age=31536000, immutable',
+        CacheControl: cacheControl,
       },
     });
 
@@ -184,8 +206,13 @@ async function main() {
   process.exit(failed > 0 ? 1 : 0);
 }
 
-// Run main
-main().catch(error => {
-  console.error('💥 Fatal error:', error);
-  process.exit(1);
-});
+// Run main when invoked as a script (the workflow and `npm run upload-assets`
+// both are); a require() gets the helpers without uploading anything.
+if (require.main === module) {
+  main().catch(error => {
+    console.error('💥 Fatal error:', error);
+    process.exit(1);
+  });
+}
+
+module.exports = { cacheControlFor, uploadFile };
