@@ -44,6 +44,16 @@
      colour tokens lose to it and only the decoration layers paint —
      a half-applied season that is very hard to spot until December.
 
+   FOOTER AND BEACON
+     The generator also emits the season's --header-* tokens onto
+       html:not([data-theme]):not([data-season="off"]) body
+         :is(.neo-footer, .neo-top, .neo-modal, .neo-beacon-link)
+     because the Footer Kit's pieces and the Beacon link sit outside
+     .header-bar and resolve their accent, borders and focus ring from
+     those tokens on themselves (queue #156). At (0,3,2) it outranks a
+     skin's pieces item (0,2,1). Paste the whole generated block, that
+     rule included, or the footer sits the season out.
+
    SELECTOR STRATEGY — why `html:not([data-theme]):not([data-season="off"]) body .header-bar`
      Sites may set their own default-header tokens at a specificity
      that beats a naive root-level rule. emoji-site does exactly
